@@ -1,3 +1,0 @@
-describe('<%= title %>', async () => {
-    <%= body %>
-})

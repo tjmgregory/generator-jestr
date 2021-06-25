@@ -1,4 +1,5 @@
 var Generator = require("yeoman-generator");
+var path = require("path");
 
 module.exports = class extends Generator {
     constructor(args, opts) {
@@ -60,5 +61,13 @@ module.exports = class extends Generator {
             );
             return;
         }
+
+        // TODO: Configurable to be test or spec & js or ts
+        const fileName = `${this.inputArgs.methodName}.test.js`;
+        this.fs.copyTpl(
+            this.templatePath("function.js"),
+            path.join(this.contextRoot, fileName),
+            this.inputArgs
+        );
     }
 };
