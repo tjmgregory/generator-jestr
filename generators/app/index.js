@@ -2,6 +2,13 @@ var Generator = require('yeoman-generator')
 var path = require('path')
 var prettier = require('gulp-prettier')
 
+const DEFAULT_PRETTIER_CONFIG = {
+    semi: false,
+    singleQuote: true,
+    tabWidth: 4,
+    trailingComma: 'es5',
+}
+
 module.exports = class extends Generator {
     constructor(args, opts) {
         super(args, opts)
@@ -11,6 +18,27 @@ module.exports = class extends Generator {
             type: Boolean,
             default: false,
         })
+
+        this.config.defaults({ prettierConfigPath: '.prettierrc.js' })
+    }
+
+    async initializing() {
+        await this._initializePrettierConfig()
+    }
+
+    async _initializePrettierConfig() {
+        const prettierConfigPath = this.config.get('prettierConfigPath')
+        if (
+            prettierConfigPath.substring(prettierConfigPath.length - 2) !== 'js'
+        ) {
+            this.log(
+                'Non .js/.cjs prettier configs not yet supported, using defaults.'
+            )
+            this.prettierConfig = DEFAULT_PRETTIER_CONFIG
+            return
+        }
+
+        this.prettierConfig = require(this.destinationPath(prettierConfigPath))
     }
 
     async prompting() {
@@ -71,14 +99,7 @@ module.exports = class extends Generator {
             this.inputArgs
         )
         // TODO: Add in yo-rc.json to say where the prettier rc file can be found, and load those if exist
-        this.queueTransformStream(
-            prettier({
-                semi: false,
-                singleQuote: true,
-                tabWidth: 4,
-                trailingComma: 'es5',
-            })
-        )
+        this.queueTransformStream(prettier())
     }
 
     _getTemplateFileName() {
