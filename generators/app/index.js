@@ -98,8 +98,7 @@ module.exports = class extends Generator {
             path.join(this.contextRoot, destinationFileName),
             this.inputArgs
         )
-        // TODO: Add in yo-rc.json to say where the prettier rc file can be found, and load those if exist
-        this.queueTransformStream(prettier())
+        this.queueTransformStream(prettier(this.prettierConfig))
     }
 
     _getTemplateFileName() {
