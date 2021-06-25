@@ -1,5 +1,6 @@
 {
     "generator-jestr": {
-        "prettierConfigPath": ".prettierrc.js"
+        "prettierConfigPath": ".prettierrc.js",
+        "defaultLanguage": "ts"
     }
 }
