@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/tjmgregory/yo-jest#readme",
   "dependencies": {
+    "gulp-prettier": "^3.0.0",
     "yeoman-generator": "5.3.0"
   }
 }

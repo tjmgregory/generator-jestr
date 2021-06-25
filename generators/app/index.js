@@ -1,5 +1,6 @@
 var Generator = require('yeoman-generator')
 var path = require('path')
+var prettier = require('gulp-prettier')
 
 module.exports = class extends Generator {
     constructor(args, opts) {
@@ -68,6 +69,15 @@ module.exports = class extends Generator {
             this.templatePath(templateFileName),
             path.join(this.contextRoot, destinationFileName),
             this.inputArgs
+        )
+        // TODO: Add in yo-rc.json to say where the prettier rc file can be found, and load those if exist
+        this.queueTransformStream(
+            prettier({
+                semi: false,
+                singleQuote: true,
+                tabWidth: 4,
+                trailingComma: 'es5',
+            })
         )
     }
 
