@@ -22,7 +22,7 @@ module.exports = class extends Generator {
 
         this.config.defaults({
             defaultLanguage: 'ts',
-            prettierConfigPath: '.prettierrc.js',
+            prettierConfigPath: null,
         })
 
         this.option('dry-run', {
@@ -43,17 +43,23 @@ module.exports = class extends Generator {
 
     async _initializePrettierConfig() {
         const prettierConfigPath = this.config.get('prettierConfigPath')
-        if (
-            prettierConfigPath.substring(prettierConfigPath.length - 2) !== 'js'
-        ) {
-            this.log(
-                'Non .js/.cjs prettier configs not yet supported, using defaults.'
-            )
-            this.prettierConfig = DEFAULT_PRETTIER_CONFIG
-            return
+        switch (true) {
+            case prettierConfigPath === null:
+                this.log('No prettier config specified, using defaults.')
+                this.prettierConfig = DEFAULT_PRETTIER_CONFIG
+                return
+            case prettierConfigPath.substring(prettierConfigPath.length - 2) !==
+                'js':
+                this.log(
+                    'Non .js/.cjs prettier configs not yet supported, using defaults.'
+                )
+                this.prettierConfig = DEFAULT_PRETTIER_CONFIG
+                return
+            default:
+                this.prettierConfig = require(this.destinationPath(
+                    prettierConfigPath
+                ))
         }
-
-        this.prettierConfig = require(this.destinationPath(prettierConfigPath))
     }
 
     async prompting() {
@@ -105,8 +111,6 @@ module.exports = class extends Generator {
         this.language =
             SUPPORTED_LANGUAGES[this.options['language']] ??
             SUPPORTED_LANGUAGES[this.config.get('defaultLanguage')]
-        this.log('LANGUAGE')
-        this.log(this.language)
 
         if (!this.language) {
             this.log(
