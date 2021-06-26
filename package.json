@@ -1,6 +1,6 @@
 {
   "name": "generator-jestr",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Yeoman generators for method/function focused jest unit tests.",
   "repository": {
     "type": "git",
